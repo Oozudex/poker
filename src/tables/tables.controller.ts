@@ -1,17 +1,26 @@
 import { Controller, Dependencies, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { TablesService } from './tables.service.js';
+import { DecksService } from './deck.service.js';
 
 @Controller('tables')
-@Dependencies(TablesService)
+@Dependencies(TablesService, DecksService)
 export class TablesController {
     tablesService: TablesService
-    constructor(tablesService: TablesService) {
+    deckService: DecksService
+    constructor(tablesService: TablesService, deckService: DecksService) {
         this.tablesService = tablesService;
+        this.deckService = deckService;
     }
 
     @Get()
     findAll() {
         return this.tablesService.getAll();
+    }
+
+    @Get('deck')
+    returnDeck() {
+        const deck = this.deckService.createDeck();
+        return this.deckService.shuffleDeck(deck);
     }
 
     @Get(':id')

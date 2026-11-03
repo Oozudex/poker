@@ -12,13 +12,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 import { Controller, Dependencies, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { TablesService } from './tables.service.js';
+import { DecksService } from './deck.service.js';
 let TablesController = class TablesController {
     tablesService;
-    constructor(tablesService) {
+    deckService;
+    constructor(tablesService, deckService) {
         this.tablesService = tablesService;
+        this.deckService = deckService;
     }
     findAll() {
         return this.tablesService.getAll();
+    }
+    returnDeck() {
+        const deck = this.deckService.createDeck();
+        return this.deckService.shuffleDeck(deck);
     }
     findOne(id) {
         return this.tablesService.getOne(id);
@@ -33,6 +40,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], TablesController.prototype, "findAll", null);
+__decorate([
+    Get('deck'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], TablesController.prototype, "returnDeck", null);
 __decorate([
     Get(':id'),
     __param(0, Param('id', ParseIntPipe)),
@@ -50,8 +63,8 @@ __decorate([
 ], TablesController.prototype, "createTable", null);
 TablesController = __decorate([
     Controller('tables'),
-    Dependencies(TablesService),
-    __metadata("design:paramtypes", [TablesService])
+    Dependencies(TablesService, DecksService),
+    __metadata("design:paramtypes", [TablesService, DecksService])
 ], TablesController);
 export { TablesController };
 //# sourceMappingURL=tables.controller.js.map
